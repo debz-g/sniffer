@@ -2,6 +2,7 @@ package dev.sniffer.ui
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -11,8 +12,10 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -24,12 +27,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Wifi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -49,7 +53,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import dev.sniffer.data.model.LogEntry
 import dev.sniffer.data.model.NetworkCall
 import dev.sniffer.data.repository.SnifferRepository
 import kotlinx.coroutines.Dispatchers
@@ -102,12 +105,22 @@ private fun SnifferOverlayContent(
         val expandedTargetY = with(density) { 8.dp.toPx() }
         val animatedPosX by animateFloatAsState(
             targetValue = if (expanded) expandedTargetX else bubblePosXPx,
-            animationSpec = tween(300), label = "posX"
+            animationSpec = if (expanded) tween(300) else spring(dampingRatio = 0.85f, stiffness = 400f),
+            label = "posX"
         )
         val animatedPosY by animateFloatAsState(
             targetValue = if (expanded) expandedTargetY else bubblePosYPx,
-            animationSpec = tween(300), label = "posY"
+            animationSpec = if (expanded) tween(300) else spring(dampingRatio = 0.85f, stiffness = 400f),
+            label = "posY"
         )
+
+        if (expanded) {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .clickable { expanded = false }
+            )
+        }
 
         AnimatedVisibility(
             visible = expanded,
@@ -149,10 +162,14 @@ private fun SnifferOverlayContent(
                 .size(with(density) { androidx.compose.ui.unit.Dp(animatedBubbleSizePx / density.density) }),
             contentAlignment = Alignment.Center
         ) {
-            Text(
-                text = "S",
-                color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.titleMedium
+            val iconSizeDp = with(density) {
+                (animatedBubbleSizePx / density.density * 0.5f).coerceIn(18f, 28f).dp
+            }
+            Icon(
+                imageVector = Icons.Filled.Wifi,
+                contentDescription = "Network",
+                tint = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier.size(iconSizeDp)
             )
         }
     }
@@ -164,10 +181,8 @@ fun SnifferInspector(
     repository: SnifferRepository,
     onClose: () -> Unit
 ) {
-    var selectedTab by remember { mutableStateOf(0) }
     var selectedCall by remember { mutableStateOf<NetworkCall?>(null) }
     val networkCalls by repository.networkCalls.collectAsState()
-    val logs by repository.logs.collectAsState()
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -181,13 +196,30 @@ fun SnifferInspector(
             )
         } else {
             Column(modifier = Modifier.fillMaxSize()) {
-                Box(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f))
-                        .padding(horizontal = 8.dp, vertical = 6.dp),
-                    contentAlignment = Alignment.CenterEnd
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Wifi,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(22.dp)
+                        )
+                        Text(
+                            "Sniffer",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
                     IconButton(
                         onClick = onClose,
                         modifier = Modifier.size(40.dp)
@@ -195,26 +227,11 @@ fun SnifferInspector(
                         Text("×", style = MaterialTheme.typography.titleLarge, color = MaterialTheme.colorScheme.onSurface)
                     }
                 }
-                TabRow(selectedTabIndex = selectedTab) {
-                    Tab(
-                        selected = selectedTab == 0,
-                        onClick = { selectedTab = 0 },
-                        text = { Text("Network") }
-                    )
-                    Tab(
-                        selected = selectedTab == 1,
-                        onClick = { selectedTab = 1 },
-                        text = { Text("Logs") }
-                    )
-                }
-                when (selectedTab) {
-                    0 -> NetworkTab(
-                        calls = networkCalls,
-                        repository = repository,
-                        onCallClick = { selectedCall = it }
-                    )
-                    1 -> LogsTab(entries = logs, repository = repository)
-                }
+                NetworkTab(
+                    calls = networkCalls,
+                    repository = repository,
+                    onCallClick = { selectedCall = it }
+                )
             }
         }
     }
@@ -252,6 +269,7 @@ private fun statusColor(code: Int): Color = when {
 
 @Composable
 fun NetworkCallItem(call: NetworkCall, onClick: () -> Unit = {}) {
+    val codeColor = statusColor(call.responseCode)
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -260,69 +278,58 @@ fun NetworkCallItem(call: NetworkCall, onClick: () -> Unit = {}) {
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
         shape = MaterialTheme.shapes.medium
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
-            Text(
-                text = "${call.requestMethod} ${call.requestUrl}",
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Text(
-                text = "${call.responseCode} • ${call.durationMs}ms${if (call.wasMocked) " (mocked)" else ""}",
-                style = MaterialTheme.typography.bodySmall,
-                color = statusColor(call.responseCode)
-            )
-        }
-    }
-}
-
-@Composable
-fun LogsTab(
-    entries: List<LogEntry>,
-    repository: SnifferRepository
-) {
-    val scope = rememberCoroutineScope()
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp)
-    ) {
-        item {
-            TextButton(onClick = { scope.launch(Dispatchers.IO) { repository.clearLogs() } }) {
-                Text("Clear")
-            }
-        }
-        items(entries) { entry ->
-            LogEntryItem(entry = entry)
-        }
-    }
-}
-
-@Composable
-fun LogEntryItem(entry: LogEntry) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 2.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-    ) {
-        Row(modifier = Modifier.padding(8.dp)) {
-            Text(
-                text = "[${entry.level}]",
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.primary
-            )
-            if (entry.tag != null) {
+        Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Surface(
+                    shape = RoundedCornerShape(6.dp),
+                    color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.8f)
+                ) {
+                    Text(
+                        text = call.requestMethod,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
+                }
                 Text(
-                    text = " ${entry.tag}: ",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    text = call.requestUrl,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.weight(1f)
                 )
             }
-            Text(
-                text = entry.message,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurface
-            )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Surface(
+                    shape = RoundedCornerShape(6.dp),
+                    color = codeColor.copy(alpha = 0.35f)
+                ) {
+                    Text(
+                        text = call.responseCode.toString(),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = codeColor,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
+                }
+                Surface(
+                    shape = RoundedCornerShape(6.dp),
+                    color = codeColor.copy(alpha = 0.25f)
+                ) {
+                    Text(
+                        text = "${call.durationMs}ms${if (call.wasMocked) " (mocked)" else ""}",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                    )
+                }
+            }
         }
     }
 }
+

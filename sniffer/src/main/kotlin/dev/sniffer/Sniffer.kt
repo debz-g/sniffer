@@ -2,6 +2,7 @@ package dev.sniffer
 
 import android.app.Activity
 import android.app.Application
+import android.content.pm.ApplicationInfo
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
@@ -40,8 +41,11 @@ object Sniffer {
      * Initialize Sniffer. Call from [Application.onCreate].
      * Injects overlay via [android.app.Application.ActivityLifecycleCallbacks] into the
      * foreground Activity's window (no SYSTEM_ALERT_WINDOW permission).
+     * No-op in release builds: only runs when the app is debuggable
+     * ([ApplicationInfo.FLAG_DEBUGGABLE]), e.g. debug build or run from IDE.
      */
     fun init(application: Application) {
+        if ((application.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) == 0) return
         if (initialized) return
         val db = SnifferDatabase.get(application)
         val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
