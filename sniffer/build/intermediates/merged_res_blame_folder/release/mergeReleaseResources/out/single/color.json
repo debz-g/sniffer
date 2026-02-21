@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "dev.sniffer-release-43:/color/vector_tint_color.xml",
+        "source": "dev.sniffer-ui-release-18:/color/vector_tint_color.xml"
+    },
+    {
+        "merged": "dev.sniffer-release-43:/color/vector_tint_theme_color.xml",
+        "source": "dev.sniffer-ui-release-18:/color/vector_tint_theme_color.xml"
+    }
+]

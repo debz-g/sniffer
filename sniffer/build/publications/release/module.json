@@ -1,0 +1,193 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "dev.sniffer",
+    "module": "sniffer",
+    "version": "0.1.4",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.13"
+    }
+  },
+  "variants": [
+    {
+      "name": "releaseApiElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "sniffer-0.1.4.aar",
+          "url": "sniffer-0.1.4.aar",
+          "size": 219566,
+          "sha512": "7211d031917b126d65e3ec8eccd57ccde62af605e10cbd5b792c427b81cc63092062e6637034121b839f6285ff796ce1b2953053832b8bec08e7cce3cf3dc2f9",
+          "sha256": "d42ced21c31cdede89b66cd071e78dea9bd9d9a21445e183547bf7ddefcc301a",
+          "sha1": "6a1006d1639bc383761e3b81864788bc83f2d102",
+          "md5": "880dfcb0216d905adbfdc0370ba5140f"
+        }
+      ]
+    },
+    {
+      "name": "releaseRuntimeElements-published",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "dependencies": [
+        {
+          "group": "androidx.core",
+          "module": "core-ktx",
+          "version": {
+            "requires": "1.12.0"
+          }
+        },
+        {
+          "group": "androidx.lifecycle",
+          "module": "lifecycle-runtime-ktx",
+          "version": {
+            "requires": "2.6.2"
+          }
+        },
+        {
+          "group": "androidx.activity",
+          "module": "activity-ktx",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.activity",
+          "module": "activity-compose",
+          "version": {
+            "requires": "1.8.1"
+          }
+        },
+        {
+          "group": "androidx.compose",
+          "module": "compose-bom",
+          "version": {
+            "requires": "2023.10.01"
+          },
+          "attributes": {
+            "org.gradle.category": "platform"
+          },
+          "endorseStrictVersions": true
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-graphics"
+        },
+        {
+          "group": "androidx.compose.ui",
+          "module": "ui-tooling-preview"
+        },
+        {
+          "group": "androidx.compose.material3",
+          "module": "material3"
+        },
+        {
+          "group": "androidx.compose.foundation",
+          "module": "foundation"
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-android",
+          "version": {
+            "requires": "1.7.3"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlinx",
+          "module": "kotlinx-coroutines-core",
+          "version": {
+            "requires": "1.7.3"
+          }
+        },
+        {
+          "group": "androidx.room",
+          "module": "room-runtime",
+          "version": {
+            "requires": "2.6.1"
+          }
+        },
+        {
+          "group": "androidx.room",
+          "module": "room-ktx",
+          "version": {
+            "requires": "2.6.1"
+          }
+        },
+        {
+          "group": "com.squareup.okhttp3",
+          "module": "okhttp",
+          "version": {
+            "requires": "4.12.0"
+          }
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib",
+          "version": {
+            "requires": "2.0.21"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "sniffer-0.1.4.aar",
+          "url": "sniffer-0.1.4.aar",
+          "size": 219566,
+          "sha512": "7211d031917b126d65e3ec8eccd57ccde62af605e10cbd5b792c427b81cc63092062e6637034121b839f6285ff796ce1b2953053832b8bec08e7cce3cf3dc2f9",
+          "sha256": "d42ced21c31cdede89b66cd071e78dea9bd9d9a21445e183547bf7ddefcc301a",
+          "sha1": "6a1006d1639bc383761e3b81864788bc83f2d102",
+          "md5": "880dfcb0216d905adbfdc0370ba5140f"
+        }
+      ]
+    },
+    {
+      "name": "releaseSourcesElements-published",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.jvm.environment": "android",
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "androidJvm"
+      },
+      "files": [
+        {
+          "name": "sniffer-0.1.4-sources.jar",
+          "url": "sniffer-0.1.4-sources.jar",
+          "size": 59056,
+          "sha512": "7838e1a271b66cea18f14e9f5b629a0d9b8ae278c2950d83e550a28c0199e28e6e8c2938f620dd8015737f8d2b7d5d986f1082c6f02576c3e3082b0a198a04da",
+          "sha256": "a93d17ba32f0da14166fbb200f390a9373f42b8e2e54305ac7fb2e0845a5ff5a",
+          "sha1": "dfe9807949c5c47346224bd54fe995a39c0179f2",
+          "md5": "c3a64f6bab203c665a8a2038c0ecf009"
+        }
+      ]
+    }
+  ]
+}
