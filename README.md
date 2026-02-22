@@ -1,6 +1,6 @@
 # Sniffer
 
-**Just sniff it.** Open-source Android debugging library: a floating overlay to inspect HTTP traffic from your app in real time. No proxy, no external tools—tap the bubble to see requests and responses.
+Open-source Android debugging library: a floating overlay to inspect HTTP traffic from your app in real time. No proxy, no external tools—tap the bubble to see requests and responses.
 
 - **License:** [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html)
 - **Repo:** [github.com/debz-g/sniffer](https://github.com/debz-g/sniffer)
