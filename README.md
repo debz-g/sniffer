@@ -91,6 +91,35 @@ val client = OkHttpClient.Builder()
 Sniffer.log("User tapped submit", tag = "Auth")
 ```
 
+### Using with Ktor
+
+Sniffer works with [Ktor](https://ktor.io/) when you use the **OkHttp** engine and add the interceptor in the engine config:
+
+1. **Dependency** — use the OkHttp engine (Android’s default engine uses OkHttp):
+
+   ```kotlin
+   implementation("io.github.debz-g:sniffer:1.0.0")
+   implementation("io.ktor:ktor-client-okhttp:2.x.x")  // or ktor-client-android on Android
+   ```
+
+2. **Init** — same as above: `Sniffer.init(this)` in `Application.onCreate()`.
+
+3. **Add interceptor** to your Ktor client:
+
+   ```kotlin
+   import io.ktor.client.*
+   import io.ktor.client.engine.okhttp.*
+   import dev.sniffer.Sniffer
+
+   val client = HttpClient(OkHttp) {
+       engine {
+           addInterceptor(Sniffer.interceptor())
+       }
+   }
+   ```
+
+   Requests made with this client will appear in the Sniffer overlay.
+
 ## Overlay
 
 - **No `SYSTEM_ALERT_WINDOW`** – the overlay is injected into the foreground Activity’s `Window.decorView` via `ActivityLifecycleCallbacks`.
