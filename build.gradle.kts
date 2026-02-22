@@ -6,6 +6,18 @@ plugins {
     id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
+// Load publish/signing secrets from local.properties (not committed) so they are available as project properties
+val localPublishProperties = java.util.Properties()
+rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { localPublishProperties.load(it) }
+listOf("SONATYPE_USERNAME", "SONATYPE_PASSWORD", "signing.keyId", "signing.password", "signing.secretKeyRingFile").forEach { key ->
+    localPublishProperties.getProperty(key)?.let { value -> rootProject.ext.set(key, value) }
+}
+subprojects {
+    listOf("SONATYPE_USERNAME", "SONATYPE_PASSWORD", "signing.keyId", "signing.password", "signing.secretKeyRingFile").forEach { key ->
+        rootProject.findProperty(key)?.let { value -> project.ext.set(key, value.toString()) }
+    }
+}
+
 group = project.findProperty("GROUP")?.toString() ?: "dev.sniffer"
 version = project.findProperty("VERSION_NAME")?.toString() ?: "1.0.0"
 

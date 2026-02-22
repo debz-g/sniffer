@@ -1,0 +1,11 @@
+## Copy to local.properties and fill in. local.properties is gitignored.
+## Required for publishing to Maven Central (./gradlew publishToMavenCentral).
+
+# Sonatype Central - https://central.sonatype.com/ → Generate User Token
+# SONATYPE_USERNAME=
+# SONATYPE_PASSWORD=
+
+# GPG signing - gpg --gen-key, then gpg --export-secret-keys -o sec.gpg
+# signing.keyId=
+# signing.password=
+# signing.secretKeyRingFile=
