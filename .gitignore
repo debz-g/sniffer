@@ -1,0 +1,81 @@
+# Built application files
+*.apk
+*.aar
+*.ap_
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+release/
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/assets/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Proguard
+*.mapping
+proguard/
+
+# Log Files
+*.log
+crashlytics-build.properties
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+.nb-gradle/
+
+# Keystore files (do not commit release keystores)
+*.jks
+*.keystore
+
+# External native build
+.externalNativeBuild/
+.cxx/
+
+# Kotlin
+.kotlin/
+*.kotlin_module
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets and local overrides (keep credentials out of the repo)
+# Use ~/.gradle/gradle.properties or env vars for SONATYPE_*, signing.*, etc.
+# gradle.properties can be committed with non-secret values only
+
+# KSP
+**/build/generated/ksp/
+
+# Test
+**/build/reports/
+**/build/test-results/
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+
+# Cursor / Editor
+.cursor/
+*.swp
+*.swo
+*~
