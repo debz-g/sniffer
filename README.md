@@ -40,21 +40,34 @@
 
    ```kotlin
    dependencies {
-       implementation("dev.sniffer:sniffer:0.1.0")
+       implementation("dev.sniffer:sniffer:1.0.0")
    }
    ```
 
    Use the same version as in this repo’s `gradle.properties` (`VERSION_NAME`).
 
-### Option B: Maven Central (planned)
+### Option B: Maven Central (recommended)
 
-Once published to Maven Central, you’ll only need:
+If Sniffer is published to [Maven Central](https://central.sonatype.com/), add nothing extra — use `mavenCentral()` and the dependency:
 
-```kotlin
-implementation("dev.sniffer:sniffer:0.1.0")
-```
+1. **App’s `settings.gradle.kts`** — ensure `mavenCentral()` is in `repositories` (default in most projects):
 
-(with `mavenCentral()` in your repositories).
+   ```kotlin
+   dependencyResolutionManagement {
+       repositories {
+           google()
+           mavenCentral()
+       }
+   }
+   ```
+
+2. **App’s module `build.gradle.kts`** (e.g. `app/build.gradle.kts`):
+
+   ```kotlin
+   dependencies {
+       implementation("dev.sniffer:sniffer:1.0.0")
+   }
+   ```
 
 ## Setup (in your app)
 
@@ -102,5 +115,14 @@ Mocks are stored in Room and observed via `repository.getEnabledMocks()` / `obse
 
 ## Publishing (maintainers)
 
-- **Maven Local:** `./gradlew publishToMavenLocal` — artifact will be under `dev.sniffer:sniffer:VERSION_NAME` (see `gradle.properties`).
-- **Maven Central (later):** Uncomment the `maven { ... }` block in `sniffer/build.gradle.kts` under `repositories`, add Sonatype credentials to `~/.gradle/gradle.properties`, then use the [Central publishing workflow](https://central.sonatype.com/publish/publish-gradle/).
+- **Maven Local:** `./gradlew publishToMavenLocal` — artifact under `dev.sniffer:sniffer:VERSION_NAME` (see `gradle.properties`).
+- **Maven Central:** Uses [gradle-nexus/publish-plugin](https://github.com/gradle-nexus/publish-plugin) (Nexus Staging API).  
+  1. At [central.sonatype.com](https://central.sonatype.com/) add and **verify** a namespace. **GROUP in gradle.properties must match this exactly** (e.g. `dev.sniffer` or `io.github.debz-g`).  
+  2. [Generate a user token](https://central.sonatype.com/usertoken); set `SONATYPE_USERNAME` and `SONATYPE_PASSWORD` in `gradle.properties`.  
+  3. Configure GPG signing: `signing.keyId`, `signing.password`, `signing.secretKeyRingFile` in `gradle.properties`.  
+  4. Run:
+     ```bash
+     ./gradlew clean publishToMavenCentral
+     ```
+  5. Open [central.sonatype.com/publishing](https://central.sonatype.com/publishing), find the deployment, and click **Release**.  
+  **400 Bad Request:** Set `GROUP` in `gradle.properties` to your **verified** namespace (e.g. `io.github.debz-g` if you verified that). See [View Namespaces](https://central.sonatype.com/namespaces).

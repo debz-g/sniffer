@@ -4,12 +4,17 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.devtools.ksp")
     id("maven-publish")
+    id("signing")
 }
 
 android {
     namespace = "dev.sniffer"
     compileSdk = 34
-
+    publishing {
+        singleVariant("release") {
+            // Omit withSourcesJar() to avoid duplicate-source copy errors; publish AAR only.
+        }
+    }
     defaultConfig {
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -69,6 +74,7 @@ afterEvaluate {
                 artifactId = "sniffer"
                 version = publicationVersion
                 pom {
+                    packaging = "aar"
                     name.set("Sniffer")
                     description.set(project.findProperty("POM_DESCRIPTION") as? String ?: "Sniffer Android debugging library")
                     url.set(project.findProperty("POM_URL") as? String ?: "https://github.com/debz-g/sniffer")
@@ -95,12 +101,13 @@ afterEvaluate {
         }
         repositories {
             mavenLocal()
-            // Uncomment and add credentials when publishing to Maven Central:
-            // maven {
-            //     name = "Central"
-            //     url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-            //     credentials(PasswordCredentials::class)
-            // }
+            // Sonatype repo is added by gradle-nexus.publish-plugin (root project)
+        }
+    }
+    // Maven Central requires signed artifacts (GPG). Configure signing.keyId, signing.secretKeyRingFile, signing.password.
+    if (project.hasProperty("signing.keyId")) {
+        signing {
+            sign(publishing.publications["release"])
         }
     }
 }
