@@ -5,6 +5,12 @@ Open-source Android debugging library: a floating overlay to inspect HTTP traffi
 - **License:** [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html)
 - **Repo:** [github.com/debz-g/sniffer](https://github.com/debz-g/sniffer)
 
+<p align="center">
+  <img src="assets/screenshot-list.png" width="32%" alt="Request list" />
+  <img src="assets/screenshot-overview.png" width="32%" alt="Call overview" />
+  <img src="assets/screenshot-response.png" width="32%" alt="Response tab" />
+</p>
+
 ---
 
 ## Install
